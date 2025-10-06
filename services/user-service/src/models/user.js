@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { Unique, CreatedAt } = require('sequelize-typescript');
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
