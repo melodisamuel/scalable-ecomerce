@@ -7,8 +7,13 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // Register user
 const registerUser = async (req, res) => {
     try{
-        const { name, email, password } = req.body;
-        if (!email || !password) return res.status(400).json({ message: 'email and password required' });
+        const { name, email, password, confirmPassword } = req.body;
+        if (!email || !password || !confirmPassword) return res.status(400).json({ message: 'email and password required' });
+
+        // Check password match 
+        if (password !== confirmPassword) {
+            return res.status(400).json({ message: 'Passwords do not match'})
+        }
 
         const existing = await User.findOne({ email });
         if (existing) return res.status(409).json({ message: 'email already exists' });
