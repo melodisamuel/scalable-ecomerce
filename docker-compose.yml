@@ -1,7 +1,7 @@
-version: "3.9"
+# version: "3.9"
 
 services:
- # ------------------------------
+  # ------------------------------
   # Core Infrastructure Services
   # ------------------------------
   redis:
@@ -22,14 +22,14 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq
     ports:
-      - "5672:5672"     # RabbitMQ messaging
-      - "15672:15672"   # RabbitMQ management dashboard
+      - "5672:5672"
+      - "15672:15672"
 
   consul:
     image: hashicorp/consul:1.18
     container_name: consul
     ports:
-      - "8500:8500"   # Consul web UI
+      - "8500:8500"
     command: "agent -server -bootstrap -ui -client=0.0.0.0"
 
   traefik:
@@ -40,8 +40,8 @@ services:
       - "--providers.docker=true"
       - "--entrypoints.web.address=:80"
     ports:
-      - "80:80"       # HTTP
-      - "8080:8080"   # Traefik dashboard
+      - "80:80"
+      - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
@@ -49,21 +49,21 @@ services:
   # Microservices
   # ------------------------------
   user-service:
-  build: ./services/user-service
-  container_name: user-service
-  environment: 
-    - MONGO_URI=mongodb://mongo:27017/userdb
-    - CONSUL_HOST=consul
-    - PORT= 4001
-  depends_on:
-    - mongo
-    - consul
-  labels:
-    - "traefik.enable=true"
-    - "traefik.http.routers.user.rule=PathPrefix(`/api/v1/users)"
-    - "traefik.http.services.user.loadbalancer.server.port=4001"
-  ports:
-    - "4001:4001"
+    build: ./services/user-service
+    container_name: user-service
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/userdb
+      - CONSUL_HOST=consul
+      - PORT=4001
+    depends_on:
+      - mongo
+      - consul
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.user.rule=PathPrefix(`/api/v1/users`)"
+      - "traefik.http.services.user.loadbalancer.server.port=4001"
+    ports:
+      - "4001:4001"
 
   product-service:
     build: ./services/product-service
@@ -80,8 +80,7 @@ services:
       - "traefik.http.routers.product.rule=PathPrefix(`/api/v1/products`)"
       - "traefik.http.services.product.loadbalancer.server.port=4000"
     ports:
-      - "4000:4000"  
-
+      - "4000:4000"
 
 volumes:
   mongo_data:

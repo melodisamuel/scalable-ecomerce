@@ -22,6 +22,10 @@ app.use('/api/v1/users', userRoutes)
 const PORT = process.env.PORT || 4001
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/userdb';
 const REDIS_URL = process.env.REDIS_URL ||  'redis://localhost:6379';
+const redis = new Redis({
+  host: process.env.REDIS_HOST || 'localhost',
+  port: process.env.REDIS_PORT || 6379,
+});
 // const CONSUL_HOST = process.env.CONSUL_HOST || 'localhost';
 
 mongoose
