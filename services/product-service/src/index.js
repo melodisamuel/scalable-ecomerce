@@ -18,9 +18,6 @@ const productRoutes = require('../src/routes/productRoutes')
 
 //Routes
 app.use('/api/v1/product', productRoutes)
-
-
-
 // ------------------------------
 // Environment Variables
 // ------------------------------
