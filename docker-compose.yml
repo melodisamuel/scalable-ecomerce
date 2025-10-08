@@ -1,6 +1,9 @@
 version: "3.9"
 
 services:
+ # ------------------------------
+  # Core Infrastructure Services
+  # ------------------------------
   redis:
     image: redis:7.2
     container_name: redis
@@ -41,6 +44,44 @@ services:
       - "8080:8080"   # Traefik dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+  # ------------------------------
+  # Microservices
+  # ------------------------------
+  user-service:
+  build: ./services/user-service
+  container_name: user-service
+  environment: 
+    - MONGO_URI=mongodb://mongo:27017/userdb
+    - CONSUL_HOST=consul
+    - PORT= 4001
+  depends_on:
+    - mongo
+    - consul
+  labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.user.rule=PathPrefix(`/api/v1/users)"
+    - "traefik.http.services.user.loadbalancer.server.port=4001"
+  ports:
+    - "4001:4001"
+
+  product-service:
+    build: ./services/product-service
+    container_name: product-service
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/productdb
+      - CONSUL_HOST=consul
+      - PORT=4000
+    depends_on:
+      - mongo
+      - consul
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.product.rule=PathPrefix(`/api/v1/products`)"
+      - "traefik.http.services.product.loadbalancer.server.port=4000"
+    ports:
+      - "4000:4000"  
+
 
 volumes:
   mongo_data:
