@@ -64,12 +64,12 @@ mongoose.connect(MONGO_URI).then(async () => {
     app.listen(PORT, async () => {
         logger.info(`Product Service listening on port ${PORT}`);
         // try to register with consul
-        try {
-            await registerWithConsul({ name: 'product-service', host: CONSUL_HOST, port: PORT });
-            logger.info("Registered with cosul (if available)");
-        } catch (e) {
-            logger.warn('Consul registration failed (ignored):', e.message || e);
-        }
+        // try {
+        //     await registerWithConsul({ name: 'product-service', host: CONSUL_HOST, port: PORT });
+        //     logger.info("Registered with cosul (if available)");
+        // } catch (e) {
+        //     logger.warn('Consul registration failed (ignored):', e.message || e);
+        // }
     });
 }).catch(err => {
     logger.error('MongoDB connection error', err);
